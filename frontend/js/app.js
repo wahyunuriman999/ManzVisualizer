@@ -10,7 +10,7 @@ export const AppState = {
   theme: 'dark',
   filters: {},
   dashboardLayout: [],
-  apiBase: 'http://localhost:8000',
+  apiBase: 'http://localhost:8050',
   dataProfile: null,
 };
 

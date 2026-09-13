@@ -34,11 +34,11 @@ echo.
 echo [3/3] Starting ManzStudio server...
 echo.
 echo ============================================
-echo  Open your browser at: http://localhost:8000
+echo  Open your browser at: http://localhost:8050
 echo  Press Ctrl+C to stop
 echo ============================================
 echo.
 
-backend\venv\Scripts\python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload --app-dir backend
+backend\venv\Scripts\python -m uvicorn main:app --host 0.0.0.0 --port 8050 --reload --app-dir backend
 
 pause
