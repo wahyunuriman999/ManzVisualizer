@@ -16,7 +16,11 @@ export default {
         
         <div id="tab-file" class="tab-content">
           <div class="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center hover:border-blue-500 transition-colors cursor-pointer" id="drop-zone">
-            <div class="text-4xl mb-4">📁</div>
+            <div class="text-4xl mb-4 text-blue-400">
+              <svg class="w-12 h-12 mx-auto fill-current" viewBox="0 0 24 24">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+              </svg>
+            </div>
             <p class="text-lg mb-2">Drag and drop your file here</p>
             <p class="text-sm text-gray-500 mb-6">Supports Excel (.xlsx), CSV, JSON</p>
             <input type="file" id="file-input" class="hidden" accept=".csv,.json,.xlsx">
