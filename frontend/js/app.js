@@ -34,13 +34,13 @@ export const EventBus = {
 // ROUTER
 const Router = {
   routes: {
-    'home': () => import('./pages/home.js?v=1.5'),
-    'data-source': () => import('./pages/data-source.js?v=1.5'),
-    'data-table': () => import('./pages/data-table.js?v=1.5'),
-    'dashboard': () => import('./pages/dashboard.js?v=1.5'),
-    'pivot': () => import('./pages/pivot.js?v=1.5'),
-    'reports': () => import('./pages/reports.js?v=1.5'),
-    'ai-studio': () => import('./pages/ai-studio.js?v=1.5')
+    'home': () => import('./pages/home.js?v=1.7'),
+    'data-source': () => import('./pages/data-source.js?v=1.7'),
+    'data-table': () => import('./pages/data-table.js?v=1.7'),
+    'dashboard': () => import('./pages/dashboard.js?v=1.7'),
+    'pivot': () => import('./pages/pivot.js?v=1.7'),
+    'reports': () => import('./pages/reports.js?v=1.7'),
+    'ai-studio': () => import('./pages/ai-studio.js?v=1.7')
   },
   async navigate(hash) {
     const page = hash.replace('#/', '') || 'home';
