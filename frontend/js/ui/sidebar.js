@@ -15,6 +15,7 @@ const navItems = [
 export function initSidebar() {
   const sidebar = document.getElementById('sidebar');
   if (!sidebar) return;
+  sidebar.innerHTML = '';
 
   // Header
   const header = document.createElement('div');

@@ -273,7 +273,6 @@ export const ChartFactory = {
     // Cross-filter on click
     chart.on('click', params => {
       if (params.name) {
-        const { EventBus: EB } = await import('../app.js').catch(()=>({EventBus:null}));
         DataEngine.applyFilter(config.xCol, params.name);
       }
     });
