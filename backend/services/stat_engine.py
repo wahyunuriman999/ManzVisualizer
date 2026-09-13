@@ -136,7 +136,11 @@ def compute_pivot(df: pd.DataFrame, rows: list, columns: list, values: list, agg
                      row_dict[c] = idx_tuple[j]
             for col in pivot.columns:
                  col_name = '_'.join(map(str, col)) if isinstance(col, tuple) else str(col)
-                 row_dict[col_name] = float(pivot.loc[idx, col])
+                 val = pivot.loc[idx, col]
+                 try:
+                     row_dict[col_name] = float(val) if pd.notna(val) else None
+                 except (ValueError, TypeError):
+                     row_dict[col_name] = str(val)
             data.append(row_dict)
             
         return {

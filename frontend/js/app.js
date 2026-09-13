@@ -84,7 +84,14 @@ export const API = {
   async request(path, options = {}) {
     try {
       const response = await fetch(`${AppState.apiBase}${path}`, options);
-      if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+      if (!response.ok) {
+        let detail = response.statusText;
+        try {
+          const errData = await response.json();
+          detail = errData.detail ? (typeof errData.detail === 'string' ? errData.detail : JSON.stringify(errData.detail)) : response.statusText;
+        } catch(e) {}
+        throw new Error(detail);
+      }
       return await response.json();
     } catch (error) {
       Toast.error(error.message);
