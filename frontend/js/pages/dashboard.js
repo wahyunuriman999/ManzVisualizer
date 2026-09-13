@@ -77,8 +77,14 @@ export default {
         <label>Type</label>
         <select id="cfg-type" class="p-2 bg-gray-800 rounded border border-gray-600 text-white">
           <option value="bar">Bar Chart</option>
+          <option value="bar-horizontal">Horizontal Bar</option>
           <option value="line">Line Chart</option>
+          <option value="area">Area Chart</option>
           <option value="pie">Pie Chart</option>
+          <option value="donut">Donut Chart</option>
+          <option value="scatter">Scatter Plot</option>
+          <option value="funnel">Funnel Chart</option>
+          <option value="waterfall">Waterfall Chart</option>
           <option value="kpi">KPI Card</option>
         </select>
         <label>Category (X-Axis)</label>

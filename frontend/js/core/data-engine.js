@@ -28,10 +28,10 @@ export const DataEngine = {
   getColumns() { return _profile?.columns || []; },
   
   getNumericCols() {
-    return (this.getColumns()).filter(c => c.type === 'number' || c.type === 'float' || c.type === 'integer').map(c => c.name);
+    return (this.getColumns()).filter(c => c.dtype.includes('int') || c.dtype.includes('float')).map(c => c.name);
   },
   getCategoricalCols() {
-    return (this.getColumns()).filter(c => c.type === 'string' || c.type === 'boolean').map(c => c.name);
+    return (this.getColumns()).filter(c => !c.dtype.includes('int') && !c.dtype.includes('float')).map(c => c.name);
   },
 
   applyFilter(col, values) {
