@@ -105,13 +105,23 @@ export default {
     `;
 
     openModal('Configure Chart', html, () => {
+      let title = document.getElementById('cfg-title').value;
+      const xCol = document.getElementById('cfg-x').value;
+      const yCol = document.getElementById('cfg-y').value;
+      const aggFunc = document.getElementById('cfg-agg').value;
+      
+      if (!title || title === 'New Chart') {
+        const aggName = aggFunc.charAt(0).toUpperCase() + aggFunc.slice(1);
+        title = `${aggName} of ${yCol} by ${xCol}`;
+      }
+
       const config = {
         id: 'widget_' + Date.now(),
-        title: document.getElementById('cfg-title').value,
+        title: title,
         type: document.getElementById('cfg-type').value,
-        xCol: document.getElementById('cfg-x').value,
-        yCol: document.getElementById('cfg-y').value,
-        aggFunc: document.getElementById('cfg-agg').value
+        xCol: xCol,
+        yCol: yCol,
+        aggFunc: aggFunc
       };
       this.addWidget(config);
     });
