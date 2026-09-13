@@ -59,12 +59,12 @@ export function initSidebar() {
   const langSelect = document.createElement('select');
   langSelect.className = 'bg-transparent border border-gray-500 rounded p-1 text-sm text-gray-300 w-full outline-none';
   const langs = [
-    {code: 'en', label: '🇬🇧 English'},
-    {code: 'id', label: '🇮🇩 Indonesian'},
-    {code: 'ar', label: '🇸🇦 Arabic'},
-    {code: 'zh', label: '🇨🇳 Chinese'},
-    {code: 'es', label: '🇪🇸 Spanish'},
-    {code: 'fr', label: '🇫🇷 French'}
+    {code: 'en', label: 'English'},
+    {code: 'id', label: 'Indonesian'},
+    {code: 'ar', label: 'Arabic'},
+    {code: 'zh', label: 'Chinese'},
+    {code: 'es', label: 'Spanish'},
+    {code: 'fr', label: 'French'}
   ];
   langs.forEach(l => {
     const opt = document.createElement('option');

@@ -15,16 +15,16 @@ export const LANGS = {
   },
   ar: { 
     app_title: 'ManzStudio', nav_home: 'الرئيسية', nav_data: 'مصادر البيانات', nav_table: 'جدول البيانات', 
-    nav_dashboard: 'لوحة القيادة', nav_pivot: 'جدول محوري', nav_reports: 'تقارير', nav_ai: 'استوديو الذكاء الاصطناعي', 
+    nav_dashboard: 'لوحة القيادة', nav_pivot: 'جدول محوري', nav_reports: 'التقارير', nav_ai: 'استوديو الذكاء الاصطناعي', 
     btn_upload: 'رفع ملف', btn_connect: 'اتصال', btn_generate: 'توليد', btn_export: 'تصدير', 
-    btn_clear_filters: 'مسح جميع الفلاتر', lbl_no_data: 'لا توجد بيانات محملة. انتقل إلى مصادر البيانات للبدء.',
+    btn_clear_filters: 'مسح كل الفلاتر', lbl_no_data: 'لا توجد بيانات. اذهب إلى مصادر البيانات للبدء.',
     btn_save: 'حفظ'
   },
   zh: { 
     app_title: 'ManzStudio', nav_home: '首页', nav_data: '数据源', nav_table: '数据表', 
-    nav_dashboard: '仪表板', nav_pivot: '数据透视表', nav_reports: '报告', nav_ai: 'AI工作室', 
+    nav_dashboard: '仪表板', nav_pivot: '透视表', nav_reports: '报告', nav_ai: 'AI 工作室', 
     btn_upload: '上传文件', btn_connect: '连接', btn_generate: '生成', btn_export: '导出', 
-    btn_clear_filters: '清除所有过滤器', lbl_no_data: '未加载数据。转到数据源以开始。',
+    btn_clear_filters: '清除所有过滤器', lbl_no_data: '未加载数据。请转到数据源以开始。',
     btn_save: '保存'
   },
   es: { 
