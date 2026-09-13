@@ -6,11 +6,11 @@ let lastGeneratedReport = "";
 export default {
   render(container) {
     if (!AppState.currentSession) {
-      container.innerHTML = \`<div class="glass-card p-10 text-center"><p class="text-xl">Please load data first in Data Sources.</p></div>\`;
+      container.innerHTML = `<div class="glass-card p-10 text-center"><p class="text-xl">Please load data first in Data Sources.</p></div>`;
       return;
     }
 
-    container.innerHTML = \`
+    container.innerHTML = `
       <div class="flex h-full gap-6 fade-in">
         <div class="w-1/3 glass-card flex flex-col gap-4 p-5">
           <h2 class="text-xl font-bold mb-2">Report Config</h2>
@@ -49,21 +49,21 @@ export default {
           </div>
         </div>
       </div>
-    \`;
+    `;
 
     const providerSel = container.querySelector('#ai-provider');
     const keyInp = container.querySelector('#ai-key');
 
     providerSel.addEventListener('change', () => {
-      keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+      keyInp.value = localStorage.getItem(`manz_key_${providerSel.value}`) || '';
       localStorage.setItem('manz_ai_provider', providerSel.value);
     });
     
     providerSel.value = localStorage.getItem('manz_ai_provider') || 'gemini';
-    keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+    keyInp.value = localStorage.getItem(`manz_key_${providerSel.value}`) || '';
 
     keyInp.addEventListener('change', () => {
-      localStorage.setItem(\`manz_key_\${providerSel.value}\`, keyInp.value);
+      localStorage.setItem(`manz_key_${providerSel.value}`, keyInp.value);
     });
 
     container.querySelector('#btn-generate').onclick = async () => {
@@ -75,10 +75,10 @@ export default {
       if (!apiKey) return Toast.error('Please enter an API Key first');
 
       const content = container.querySelector('#report-content');
-      content.innerHTML = \`<div class="flex flex-col items-center justify-center h-full gap-4 mt-10 text-blue-400">
+      content.innerHTML = `<div class="flex flex-col items-center justify-center h-full gap-4 mt-10 text-blue-400">
         <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
-        <p class="text-lg">Generating highly detailed executive report with \${provider}...</p>
-      </div>\`;
+        <p class="text-lg">Generating highly detailed executive report with ${provider}...</p>
+      </div>`;
       
       try {
         const res = await API.post('/api/ai/report', {
@@ -94,7 +94,7 @@ export default {
         
         Toast.success('Report generated successfully.');
       } catch (err) {
-        content.innerHTML = \`<div class="p-4 bg-red-900/50 border border-red-500 rounded text-red-200">\${err.message}</div>\`;
+        content.innerHTML = `<div class="p-4 bg-red-900/50 border border-red-500 rounded text-red-200">${err.message}</div>`;
       }
     };
 

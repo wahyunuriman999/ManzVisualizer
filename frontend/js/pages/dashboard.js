@@ -74,12 +74,12 @@ export default {
     const numCols = DataEngine.getNumericCols();
     const catCols = DataEngine.getCategoricalCols();
     
-    const html = \`
+    const html = `
       <div class="flex gap-4 h-[400px]">
         <div class="w-1/2 flex flex-col gap-3 overflow-y-auto pr-2">
           <h4 class="font-bold text-blue-400 border-b border-gray-700 pb-2 mb-1">Data Configuration</h4>
           <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Title</label>
-          <input type="text" id="cfg-title" class="p-2 bg-gray-800 rounded border border-gray-600 text-white" value="\${existingConfig ? existingConfig.title : 'New Chart'}">
+          <input type="text" id="cfg-title" class="p-2 bg-gray-800 rounded border border-gray-600 text-white" value="${existingConfig ? existingConfig.title : 'New Chart'}">
           
           <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Type</label>
           <select id="cfg-type" class="p-2 bg-gray-800 rounded border border-gray-600 text-white">
@@ -97,12 +97,12 @@ export default {
 
           <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Category (X-Axis)</label>
           <select id="cfg-x" class="p-2 bg-gray-800 rounded border border-gray-600 text-white">
-            \${catCols.map(c => \`<option value="\${c}">\${c}</option>\`).join('')}
+            ${catCols.map(c => `<option value="${c}">${c}</option>`).join('')}
           </select>
 
           <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Value (Y-Axis)</label>
           <select id="cfg-y" class="p-2 bg-gray-800 rounded border border-gray-600 text-white">
-            \${numCols.map(c => \`<option value="\${c}">\${c}</option>\`).join('')}
+            ${numCols.map(c => `<option value="${c}">${c}</option>`).join('')}
           </select>
 
           <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Aggregation</label>
@@ -126,12 +126,12 @@ export default {
           </select>
 
           <label class="flex items-center gap-3 mt-4 text-sm font-semibold cursor-pointer">
-            <input type="checkbox" id="cfg-labels" class="w-4 h-4 rounded bg-gray-800 border-gray-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900" \${(!existingConfig || existingConfig.showLabels !== false) ? 'checked' : ''}>
+            <input type="checkbox" id="cfg-labels" class="w-4 h-4 rounded bg-gray-800 border-gray-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900" ${(!existingConfig || existingConfig.showLabels !== false) ? 'checked' : ''}>
             Show Data Labels
           </label>
         </div>
       </div>
-    \`;
+    `;
 
     openModal(existingConfig ? 'Edit Widget' : 'Configure Chart', html, () => {
       let title = document.getElementById('cfg-title').value;
@@ -143,7 +143,7 @@ export default {
       
       if (!title || title === 'New Chart') {
         const aggName = aggFunc.charAt(0).toUpperCase() + aggFunc.slice(1);
-        title = \`\${aggName} of \${yCol} by \${xCol}\`;
+        title = `${aggName} of ${yCol} by ${xCol}`;
       }
 
       if (existingConfig) {
@@ -156,7 +156,7 @@ export default {
         existingConfig.showLabels = showLabels;
         
         // Update DOM title
-        const widgetHeader = document.querySelector(\`#\${existingConfig.id}\`).previousElementSibling.querySelector('span');
+        const widgetHeader = document.querySelector(`#${existingConfig.id}`).previousElementSibling.querySelector('span');
         if (widgetHeader) widgetHeader.textContent = title;
         
         // Re-render chart
@@ -193,18 +193,18 @@ export default {
     el.setAttribute('gs-w', 4);
     el.setAttribute('gs-h', 4);
     
-    el.innerHTML = \`
+    el.innerHTML = `
       <div class="grid-stack-item-content glass-card flex flex-col relative group">
         <div class="text-sm text-gray-400 font-semibold mb-2 flex justify-between items-center z-10">
-          <span class="truncate pr-2">\${config.title}</span>
+          <span class="truncate pr-2">${config.title}</span>
           <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-            <button class="text-blue-400 hover:text-blue-300" onclick="window.editWidget('\${config.id}')">⚙️</button>
+            <button class="text-blue-400 hover:text-blue-300" onclick="window.editWidget('${config.id}')">⚙️</button>
             <button class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-lg" onclick="this.closest('.grid-stack-item').remove()">&times;</button>
           </div>
         </div>
-        <div class="chart-container flex-grow w-full h-full absolute inset-0 pt-8 pb-2 px-2" id="\${config.id}"></div>
+        <div class="chart-container flex-grow w-full h-full absolute inset-0 pt-8 pb-2 px-2" id="${config.id}"></div>
       </div>
-    \`;
+    `;
     this.grid.addWidget(el);
     
     setTimeout(() => {

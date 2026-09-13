@@ -81,15 +81,15 @@ export default {
     const keyInp = container.querySelector('#ai-key');
 
     providerSel.addEventListener('change', () => {
-      keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+      keyInp.value = localStorage.getItem(`manz_key_${providerSel.value}`) || '';
       localStorage.setItem('manz_ai_provider', providerSel.value);
     });
     
     providerSel.value = localStorage.getItem('manz_ai_provider') || 'gemini';
-    keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+    keyInp.value = localStorage.getItem(`manz_key_${providerSel.value}`) || '';
 
     keyInp.addEventListener('change', () => {
-      localStorage.setItem(\`manz_key_\${providerSel.value}\`, keyInp.value);
+      localStorage.setItem(`manz_key_${providerSel.value}`, keyInp.value);
     });
 
     // NLQ Logic
@@ -99,7 +99,7 @@ export default {
       if (!keyInp.value) return Toast.error('Please enter an API Key first');
 
       const results = container.querySelector('#nlq-results');
-      results.innerHTML = \`<div class="flex flex-col items-center mt-20"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div><p class="text-blue-400">AI is analyzing your question...</p></div>\`;
+      results.innerHTML = `<div class="flex flex-col items-center mt-20"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div><p class="text-blue-400">AI is analyzing your question...</p></div>`;
       
       try {
         const res = await API.post('/api/ai/nlq', {
@@ -109,43 +109,43 @@ export default {
           api_key: keyInp.value
         });
 
-        let html = \`
+        let html = `
           <h4 class="font-bold text-xl mb-4 text-blue-300">Answer:</h4>
-          <p class="text-gray-200 mb-6 text-lg leading-relaxed">\${res.explanation}</p>
-        \`;
+          <p class="text-gray-200 mb-6 text-lg leading-relaxed">${res.explanation}</p>
+        `;
 
         if (res.sql_query) {
-          html += \`
+          html += `
             <h5 class="font-bold mb-2 text-gray-400">Generated Query:</h5>
             <div class="bg-gray-900 p-4 rounded border border-gray-700 font-mono text-sm text-green-400 mb-6 shadow-inner">
-              \${res.sql_query}
+              ${res.sql_query}
             </div>
-          \`;
+          `;
         }
 
         if (res.result && res.result.length > 0) {
           const cols = Object.keys(res.result[0]);
-          html += \`
+          html += `
             <h5 class="font-bold mb-2 text-gray-400">Data Result (First 100 rows):</h5>
             <div class="overflow-auto border border-gray-700 rounded mb-6 max-h-64 shadow">
               <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-800 sticky top-0 shadow">
-                  <tr>\${cols.map(c => \`<th class="p-2 border-b border-gray-700 font-bold">\${c}</th>\`).join('')}</tr>
+                  <tr>${cols.map(c => `<th class="p-2 border-b border-gray-700 font-bold">${c}</th>`).join('')}</tr>
                 </thead>
                 <tbody>
-                  \${res.result.map((row, i) => \`
-                    <tr class="\${i%2===0?'bg-gray-900':'bg-gray-800'} hover:bg-blue-900 transition-colors">
-                      \${cols.map(c => \`<td class="p-2 border-b border-gray-700">\${row[c]}</td>\`).join('')}
+                  ${res.result.map((row, i) => `
+                    <tr class="${i%2===0?'bg-gray-900':'bg-gray-800'} hover:bg-blue-900 transition-colors">
+                      ${cols.map(c => `<td class="p-2 border-b border-gray-700">${row[c]}</td>`).join('')}
                     </tr>
-                  \`).join('')}
+                  `).join('')}
                 </tbody>
               </table>
             </div>
-          \`;
+          `;
         }
         results.innerHTML = html;
       } catch (err) {
-        results.innerHTML = \`<div class="p-4 bg-red-900/50 border border-red-500 rounded text-red-200">\${err.message}</div>\`;
+        results.innerHTML = `<div class="p-4 bg-red-900/50 border border-red-500 rounded text-red-200">${err.message}</div>`;
       }
     };
 
@@ -153,7 +153,7 @@ export default {
     container.querySelector('#btn-generate-insights').onclick = async () => {
       if (!keyInp.value) return Toast.error('Please enter an API Key first');
       const c = container.querySelector('#insights-container');
-      c.innerHTML = \`<div class="col-span-full flex flex-col items-center mt-20"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div><p class="text-purple-400">Scanning millions of data points for patterns...</p></div>\`;
+      c.innerHTML = `<div class="col-span-full flex flex-col items-center mt-20"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div><p class="text-purple-400">Scanning millions of data points for patterns...</p></div>`;
       
       try {
         const res = await API.post('/api/ai/insights', {
@@ -172,22 +172,22 @@ export default {
         const colors = { high:'border-red-500', medium:'border-yellow-500', low:'border-blue-500' };
 
         res.insights.forEach(ins => {
-          c.innerHTML += \`
-            <div class="glass-card p-5 border-l-4 \${colors[ins.severity] || 'border-gray-500'} hover:-translate-y-1 transition-transform shadow-lg">
+          c.innerHTML += `
+            <div class="glass-card p-5 border-l-4 ${colors[ins.severity] || 'border-gray-500'} hover:-translate-y-1 transition-transform shadow-lg">
               <div class="flex items-center gap-2 mb-3">
-                <span class="text-2xl">\${icons[ins.type] || '📌'}</span>
-                <h4 class="font-bold text-lg leading-tight">\${ins.title}</h4>
+                <span class="text-2xl">${icons[ins.type] || '📌'}</span>
+                <h4 class="font-bold text-lg leading-tight">${ins.title}</h4>
               </div>
-              <p class="text-gray-300 text-sm leading-relaxed">\${ins.description}</p>
+              <p class="text-gray-300 text-sm leading-relaxed">${ins.description}</p>
               <div class="mt-4 flex gap-2">
-                <span class="text-xs px-2 py-1 bg-gray-800 rounded uppercase tracking-wider text-gray-400">\${ins.type}</span>
-                <span class="text-xs px-2 py-1 bg-gray-800 rounded uppercase tracking-wider text-gray-400">\${ins.severity} priority</span>
+                <span class="text-xs px-2 py-1 bg-gray-800 rounded uppercase tracking-wider text-gray-400">${ins.type}</span>
+                <span class="text-xs px-2 py-1 bg-gray-800 rounded uppercase tracking-wider text-gray-400">${ins.severity} priority</span>
               </div>
             </div>
-          \`;
+          `;
         });
       } catch (err) {
-        c.innerHTML = \`<div class="col-span-full p-4 bg-red-900/50 border border-red-500 rounded text-red-200">\${err.message}</div>\`;
+        c.innerHTML = `<div class="col-span-full p-4 bg-red-900/50 border border-red-500 rounded text-red-200">${err.message}</div>`;
       }
     };
   }
