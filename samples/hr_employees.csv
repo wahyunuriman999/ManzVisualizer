@@ -1,0 +1,51 @@
+Employee_ID,Name,Department,Position,Level,Age,Gender,Hire_Date,Salary,Performance_Score,Training_Hours,Attendance_Pct,Overtime_Hours,Satisfaction_Score,City
+E001,Andi Wijaya,Engineering,Senior Developer,Senior,32,Male,2019-03-15,18000000,4.5,48,98.5,25,4.2,Jakarta
+E002,Sari Rahayu,Marketing,Marketing Manager,Manager,38,Female,2017-06-01,22000000,4.8,36,99.0,15,4.5,Surabaya
+E003,Budi Hartono,Sales,Sales Executive,Junior,25,Male,2022-08-10,8500000,3.8,24,95.5,40,3.5,Bandung
+E004,Dewi Kusuma,HR,HR Specialist,Mid,30,Female,2020-01-20,12000000,4.2,30,97.8,10,4.0,Jakarta
+E005,Fajar Nugroho,Engineering,DevOps Engineer,Mid,28,Male,2021-05-12,15000000,4.0,52,96.5,30,3.8,Jakarta
+E006,Gita Permata,Finance,Financial Analyst,Mid,31,Female,2020-09-01,13500000,4.3,28,98.2,12,4.1,Surabaya
+E007,Hendra Putra,Sales,Sales Manager,Manager,40,Male,2015-02-28,25000000,4.7,20,99.5,20,4.6,Jakarta
+E008,Indah Lestari,Engineering,Junior Developer,Junior,23,Female,2023-07-01,9000000,3.5,60,94.0,35,3.2,Bandung
+E009,Joko Santoso,Operations,Operations Manager,Manager,42,Male,2014-11-15,28000000,4.9,18,99.8,8,4.8,Jakarta
+E010,Kartini Ningsih,Marketing,Content Specialist,Junior,26,Female,2022-03-20,9500000,4.0,40,96.0,22,3.9,Yogyakarta
+E011,Lukman Hakim,IT,IT Support,Junior,24,Male,2023-01-10,8000000,3.6,36,95.0,18,3.4,Jakarta
+E012,Maya Sari,Finance,CFO,Director,50,Female,2010-04-01,55000000,5.0,12,100.0,5,5.0,Jakarta
+E013,Nanda Pratama,Engineering,Tech Lead,Senior,35,Male,2018-07-15,22000000,4.6,44,98.8,28,4.3,Surabaya
+E014,Olivia Tan,HR,HR Manager,Manager,37,Female,2016-10-01,20000000,4.5,25,99.2,10,4.4,Jakarta
+E015,Pandu Wibowo,Sales,Sales Director,Director,45,Male,2012-05-20,45000000,4.8,15,99.6,12,4.7,Jakarta
+E016,Rini Cahyani,Marketing,Digital Marketing,Mid,29,Female,2020-11-15,11500000,4.1,42,97.5,20,4.0,Bandung
+E017,Sigit Prasetyo,Engineering,Backend Developer,Mid,30,Male,2020-08-01,14000000,4.2,50,97.0,32,3.9,Jakarta
+E018,Tuti Rahmawati,Operations,Logistics Coordinator,Mid,33,Female,2019-06-10,11000000,3.9,28,96.8,15,3.7,Surabaya
+E019,Umar Faruq,IT,Network Engineer,Mid,31,Male,2020-02-14,13000000,4.0,38,97.2,20,3.8,Jakarta
+E020,Vina Marlina,Finance,Accountant,Junior,25,Female,2022-09-05,9000000,3.7,32,95.8,14,3.6,Bandung
+E021,Wahyu Santoso,Engineering,CTO,Director,48,Male,2011-03-01,60000000,5.0,10,100.0,10,5.0,Jakarta
+E022,Xenia Putri,Marketing,Brand Manager,Senior,34,Female,2018-12-01,18000000,4.4,35,98.5,18,4.2,Jakarta
+E023,Yoga Pratama,Sales,Sales Executive,Junior,24,Male,2023-04-15,8000000,3.4,22,93.5,45,3.1,Surabaya
+E024,Zara Kusumaningrum,HR,Recruiter,Junior,27,Female,2022-01-10,9500000,4.0,30,96.5,12,3.8,Jakarta
+E025,Agus Budiman,Operations,Warehouse Manager,Senior,38,Male,2017-08-20,16000000,4.1,25,97.8,22,4.0,Surabaya
+E026,Bella Anggraeni,Engineering,Frontend Developer,Mid,28,Female,2021-03-10,13500000,4.3,46,97.5,28,4.0,Jakarta
+E027,Cahyo Nugraha,Finance,Tax Specialist,Mid,32,Male,2019-10-15,13000000,4.1,30,97.0,16,3.9,Jakarta
+E028,Dinda Ayu,Marketing,Social Media,Junior,23,Female,2023-06-01,8500000,3.8,38,95.5,25,3.6,Yogyakarta
+E029,Eko Prasetyo,IT,Cybersecurity Analyst,Senior,36,Male,2017-04-20,20000000,4.6,55,98.8,15,4.3,Jakarta
+E030,Fitri Handayani,Sales,Account Manager,Mid,31,Female,2020-07-01,14000000,4.2,26,97.2,30,4.0,Bandung
+E031,Galih Wibisono,Engineering,Data Engineer,Senior,33,Male,2018-09-10,19000000,4.5,50,98.2,26,4.2,Jakarta
+E032,Hani Sulistyo,HR,Training Coordinator,Mid,29,Female,2021-02-15,11000000,4.0,35,97.0,10,4.1,Jakarta
+E033,Ivan Kristanto,Operations,Procurement Officer,Mid,30,Male,2020-12-01,12000000,3.9,28,96.5,18,3.7,Surabaya
+E034,Julia Maharani,Finance,Financial Controller,Senior,40,Female,2016-05-10,24000000,4.7,22,99.0,12,4.5,Jakarta
+E035,Kevin Wijaya,Engineering,Mobile Developer,Mid,27,Male,2021-08-20,14500000,4.2,48,97.5,30,4.0,Jakarta
+E036,Lina Octavia,Marketing,Marketing Director,Director,46,Female,2013-01-15,48000000,4.9,14,99.5,8,4.8,Jakarta
+E037,Muhamad Rizki,Sales,Sales Executive,Junior,22,Male,2024-01-10,7500000,3.2,18,92.0,50,2.9,Bandung
+E038,Nita Anggraeni,IT,Database Admin,Mid,31,Female,2020-03-20,13500000,4.1,40,97.2,20,3.9,Jakarta
+E039,Oscar Pratama,Operations,Quality Manager,Senior,37,Male,2017-11-05,18000000,4.4,30,98.5,15,4.2,Surabaya
+E040,Putri Andriani,Engineering,QA Engineer,Mid,28,Female,2021-06-15,12500000,4.0,42,97.0,22,3.8,Jakarta
+E041,Qori Nasution,Finance,Budget Analyst,Junior,26,Male,2022-10-01,10000000,3.8,28,96.0,14,3.7,Jakarta
+E042,Rani Fitriani,Marketing,PR Specialist,Mid,30,Female,2020-04-01,12000000,4.1,32,97.5,18,4.0,Surabaya
+E043,Sandi Gunawan,IT,System Analyst,Senior,35,Male,2018-06-10,17000000,4.3,44,98.2,22,4.1,Jakarta
+E044,Tiara Wulandari,HR,Compensation Analyst,Mid,29,Female,2021-09-01,11500000,4.0,28,97.0,10,3.9,Jakarta
+E045,Ujang Koswara,Operations,Fleet Manager,Mid,34,Male,2019-07-15,13000000,3.8,22,96.5,20,3.7,Bandung
+E046,Vanya Christy,Engineering,AI/ML Engineer,Senior,31,Female,2019-01-20,21000000,4.7,56,98.8,28,4.4,Jakarta
+E047,Wandi Setiawan,Sales,Regional Manager,Manager,39,Male,2016-03-01,26000000,4.6,20,99.2,15,4.5,Surabaya
+E048,Xander Halim,Finance,Investment Analyst,Mid,33,Male,2019-11-10,15000000,4.2,35,97.5,16,4.0,Jakarta
+E049,Yunita Dewi,Marketing,SEO Specialist,Junior,25,Female,2022-07-20,9500000,3.9,40,96.0,20,3.7,Yogyakarta
+E050,Zainal Arifin,Operations,CEO,Director,52,Male,2008-01-02,80000000,5.0,8,100.0,5,5.0,Jakarta

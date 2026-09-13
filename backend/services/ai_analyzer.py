@@ -1,63 +1,91 @@
-import os
 import json
+import requests
+from openai import OpenAI
+import google.generativeai as genai
+import anthropic
+import cohere
 
-def generate_report(data_summary: dict, user_notes: str) -> str:
-    """
-    Generates an analytical report based on the data summary and user notes.
-    Uses OpenAI API if OPENAI_API_KEY is set in environment, otherwise falls back to a mock report.
-    """
-    api_key = os.environ.get("OPENAI_API_KEY")
-    
-    # Compress the summary to save tokens
-    context = json.dumps({
-        "rows": data_summary["total_rows"],
-        "columns": data_summary["columns"],
-        "stats": data_summary["basic_stats"]
-    })[:1000] # truncate if too long
-
-    if not api_key:
-        # Fallback Mock Report
-        notes_section = f"\n\n**Additional Insights based on your notes:**\n\"{user_notes}\"" if user_notes else ""
-        return f"""### Automated AI Data Report (Mock)
-
-**Notice:** No API Key was detected in the environment (`OPENAI_API_KEY`). This is a simulated report. To enable true dynamic AI analysis, please configure your API key.
-
-#### Overview
-The dataset contains **{data_summary['total_rows']} rows** and **{len(data_summary['columns'])} columns**. 
-
-#### Data Structure
-* **Numerical Metrics:** {', '.join(data_summary['numerical_columns']) if data_summary['numerical_columns'] else 'None'}
-* **Categorical Dimensions:** {', '.join(data_summary['categorical_columns']) if data_summary['categorical_columns'] else 'None'}
-
-#### Initial Findings
-Based on the structure, the data appears to track metrics across different categories. A bar chart has been automatically generated to visualize the top categorical distributions against the primary numerical metric.{notes_section}
-"""
-
-    # If API key exists, call OpenAI
-    import openai
-    openai.api_key = api_key
-
-    prompt = f"""
-    You are an expert data analyst. I am providing you with a statistical summary of a dataset.
-    Please write a professional, concise executive summary report (in Markdown format).
-    
-    Data Summary (JSON): {context}
-    
-    User Additional Notes/Instructions: {user_notes or 'Provide a general overview.'}
-    
-    Ensure the tone is professional, insightful, and formatted with markdown headers and bullet points.
-    """
-
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are an elite data scientist."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500
+def get_llm_response(prompt: str, provider: str, api_key: str) -> str:
+    if provider == 'openai':
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
         )
-        return response['choices'][0]['message']['content']
-    except Exception as e:
-        return f"### Error Generating Report\nAn error occurred while contacting the AI provider: {str(e)}"
+        return response.choices[0].message.content
+    elif provider == 'gemini':
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-pro')
+        response = model.generate_content(prompt)
+        return response.text
+    elif provider == 'anthropic':
+        client = anthropic.Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text
+    elif provider == 'cohere':
+        co = cohere.Client(api_key)
+        response = co.chat(message=prompt, model="command-r")
+        return response.text
+    elif provider == 'ollama':
+        resp = requests.post('http://localhost:11434/api/generate', json={
+            "model": "llama3", # default fallback
+            "prompt": prompt,
+            "stream": False
+        })
+        resp.raise_for_status()
+        return resp.json().get("response", "")
+    else:
+        raise ValueError("Unsupported AI provider")
+
+def generate_report(profile: dict, provider: str, api_key: str, title: str, notes: str) -> str:
+    prompt = f"Write an executive summary report for data titled '{title}'. Notes: {notes}. Data profile: {json.dumps(profile, default=str)}. Return as Markdown."
+    return get_llm_response(prompt, provider, api_key)
+
+def generate_insights(profile: dict, stats_summary: dict, provider: str, api_key: str, notes: str) -> list[dict]:
+    prompt = f"""Given the data profile and stats, generate 5-8 insights in JSON format.
+    Format must be a JSON array of objects, each with: title (string), description (string), type (trend|anomaly|correlation|distribution|recommendation), severity (low|medium|high).
+    Data: {json.dumps(profile, default=str)}. Stats: {json.dumps(stats_summary, default=str)}"""
+    
+    text = get_llm_response(prompt, provider, api_key)
+    # Basic JSON extraction
+    try:
+        start = text.find('[')
+        end = text.rfind(']') + 1
+        return json.loads(text[start:end])
+    except:
+        return [{"title": "Failed to parse insights", "description": text, "type": "recommendation", "severity": "low"}]
+
+def natural_language_query(question: str, profile: dict, provider: str, api_key: str) -> dict:
+    prompt = f"""Convert the following question into a pandas query/filter expression or SQL logic to apply on a dataframe `df`. Also suggest a chart type.
+    Question: {question}
+    Columns: {json.dumps([c['name'] for c in profile['columns']])}
+    Return ONLY JSON with keys: sql_query (string, pandas query string like "age > 30 and country == 'US'"), chart_suggestion (string), explanation (string)."""
+    
+    text = get_llm_response(prompt, provider, api_key)
+    try:
+        start = text.find('{')
+        end = text.rfind('}') + 1
+        data = json.loads(text[start:end])
+        data['result'] = [] # to be filled by caller
+        return data
+    except:
+        return {"sql_query": "", "result": [], "chart_suggestion": "table", "explanation": "Failed to parse LLM response"}
+
+def suggest_charts(profile: dict) -> list[dict]:
+    suggestions = []
+    num_cols = [c['name'] for c in profile['columns'] if c['dtype'] in ('int64', 'float64')]
+    cat_cols = [c['name'] for c in profile['columns'] if c['dtype'] in ('object', 'string', 'category')]
+    date_cols = [c['name'] for c in profile['columns'] if 'date' in c['name'].lower() or c['dtype'] == 'datetime64[ns]']
+    
+    if len(num_cols) >= 2:
+        suggestions.append({"chart_type": "scatter", "x_col": num_cols[0], "y_col": num_cols[1], "title": "Scatter Plot", "reason": "Two numeric columns found."})
+    if len(cat_cols) >= 1 and len(num_cols) >= 1:
+        suggestions.append({"chart_type": "bar", "x_col": cat_cols[0], "y_col": num_cols[0], "title": "Bar Chart", "reason": "Categorical and numeric column found."})
+    if len(date_cols) >= 1 and len(num_cols) >= 1:
+         suggestions.append({"chart_type": "line", "x_col": date_cols[0], "y_col": num_cols[0], "title": "Line Chart", "reason": "Time series data found."})
+    
+    return suggestions

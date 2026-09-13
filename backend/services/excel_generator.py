@@ -1,49 +1,42 @@
-import openpyxl
-import tempfile
-import os
+import io
 import pandas as pd
+import xlsxwriter
 
-def generate_template_excel(df: pd.DataFrame, template_path: str) -> str:
-    """
-    Loads an existing template.xlsx, injects the DataFrame into the 'RAW_DATA' sheet,
-    and returns the path to the newly generated temporary .xlsx file.
-    """
-    try:
-        # Load the user's template
-        wb = openpyxl.load_workbook(template_path)
-    except FileNotFoundError:
-        # Fallback if user hasn't created the template yet, we create a basic one
-        wb = openpyxl.Workbook()
-        ws = wb.active
-        ws.title = "RAW_DATA"
-    except Exception as e:
-        raise ValueError(f"Failed to open template.xlsx. Ensure it is a valid Excel file. Error: {str(e)}")
-
-    # Ensure RAW_DATA sheet exists
-    sheet_name = "RAW_DATA"
-    if sheet_name in wb.sheetnames:
-        ws = wb[sheet_name]
-        # Clear existing data except header (row 1)
-        if ws.max_row > 1:
-            ws.delete_rows(2, ws.max_row - 1)
-    else:
-        ws = wb.create_sheet(sheet_name)
-
-    # Write Headers
-    headers = df.columns.tolist()
-    for col_num, header in enumerate(headers, 1):
-        ws.cell(row=1, column=col_num, value=str(header))
-
-    # Write Data
-    # Iterating over values is much faster than iterrows()
-    for row_num, row_data in enumerate(df.values, 2):
-        for col_num, value in enumerate(row_data, 1):
-            # openpyxl handles native python types well, but ensure no complex types
-            ws.cell(row=row_num, column=col_num, value=value)
-
-    # Save to a temporary file
-    fd, temp_path = tempfile.mkstemp(suffix=".xlsx", prefix="nexus_report_")
-    os.close(fd)
+def generate_excel(df: pd.DataFrame, title: str, charts_data: list[dict]) -> bytes:
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
     
-    wb.save(temp_path)
-    return temp_path
+    # Sheet 1: Data
+    worksheet_data = workbook.add_worksheet("Data")
+    header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC', 'border': 1})
+    
+    for col_num, value in enumerate(df.columns.values):
+        worksheet_data.write(0, col_num, value, header_format)
+        
+    for row_num, row_data in enumerate(df.values):
+        for col_num, value in enumerate(row_data):
+            # Handle timestamps/NaTs
+            if pd.isna(value):
+                value = ""
+            elif isinstance(value, pd.Timestamp):
+                value = value.strftime('%Y-%m-%d %H:%M:%S')
+            worksheet_data.write(row_num + 1, col_num, value)
+            
+    # Sheet 2: Summary stats
+    worksheet_stats = workbook.add_worksheet("Summary")
+    stats_df = df.describe(include='all').reset_index()
+    for col_num, value in enumerate(stats_df.columns.values):
+        worksheet_stats.write(0, col_num, str(value), header_format)
+    for row_num, row_data in enumerate(stats_df.values):
+        for col_num, value in enumerate(row_data):
+            if pd.isna(value):
+                value = ""
+            worksheet_stats.write(row_num + 1, col_num, str(value))
+            
+    # Sheet 3: Charts
+    # Just creating a placeholder sheet for now as implementing native xlsxwriter charts from arbitrary JSON is complex
+    worksheet_charts = workbook.add_worksheet("Charts")
+    worksheet_charts.write(0, 0, "Charts data included in request, but native generation requires specific mapping.")
+    
+    workbook.close()
+    return output.getvalue()
