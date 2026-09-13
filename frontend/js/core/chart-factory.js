@@ -62,22 +62,22 @@ const CHART_TYPES = {
     grid: { left:'5%', right:'5%', bottom:'12%', top:'15%', containLabel:true },
     xAxis: { type:'category', data:d.map(r=>r.label), axisLabel:{ ...commonAxis.axisLabel, rotate:30 }, axisLine: commonAxis.axisLine },
     yAxis: { type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine },
-    series: [{ data:d.map(r=>r.value), type:'bar', barMaxWidth: 50, itemStyle:{ borderRadius: [4,4,0,0], color:c.palette?.[0]||COLOR_PALETTES.default[0] },
-      label:{ show:true, position:'top', formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10 } }]
+    series: [{ data:d.map(r=>r.value), type:'bar', barMaxWidth: 50, itemStyle:{ borderRadius: [4,4,0,0], color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0] },
+      label:{ show: c.showLabels !== false, position:'top', formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10 } }]
   }),
   'bar-horizontal': (d, c) => ({
     tooltip:{trigger:'axis', formatter: (p) => `${formatLabel(p[0].name)}<br/><span style="font-weight:bold">${p[0].value.toLocaleString()}</span>`},
     grid:{left:'5%',right:'10%',bottom:'5%',top:'15%',containLabel:true},
     xAxis:{type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine},
     yAxis:{type:'category', data:d.map(r=>r.label), axisLabel: commonAxis.axisLabel, axisLine: commonAxis.axisLine},
-    series:[{data:d.map(r=>r.value),type:'bar', barMaxWidth: 40, itemStyle:{ borderRadius: [0,4,4,0], color:c.palette?.[0]||COLOR_PALETTES.default[1] },
-      label:{show:true, position:'right', formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10}}]
+    series:[{data:d.map(r=>r.value),type:'bar', barMaxWidth: 40, itemStyle:{ borderRadius: [0,4,4,0], color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[1] },
+      label:{show: c.showLabels !== false, position:'right', formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10}}]
   }),
   'bar-stacked': (d, c) => ({
     tooltip:{trigger:'axis',axisPointer:{type:'shadow'}}, grid:{left:'5%',right:'5%',containLabel:true},
     xAxis: { type:'category', data:d.map(r=>r.label), axisLabel: { ...commonAxis.axisLabel, rotate:30 }, axisLine: commonAxis.axisLine },
     yAxis: { type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine },
-    series:[{data:d.map(r=>r.value),type:'bar',stack:'total',itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[2]}}]
+    series:[{data:d.map(r=>r.value),type:'bar',stack:'total',itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[2]}}]
   }),
   line: (d, c) => ({
     tooltip:{trigger:'axis', formatter: (p) => `${formatLabel(p[0].name)}<br/><span style="font-weight:bold">${p[0].value.toLocaleString()}</span>`},
@@ -85,8 +85,8 @@ const CHART_TYPES = {
     xAxis: { type:'category', data:d.map(r=>r.label), axisLabel: { ...commonAxis.axisLabel, rotate:30 }, axisLine: commonAxis.axisLine },
     yAxis: { type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine },
     series:[{data:d.map(r=>r.value),type:'line', smooth:true, symbolSize:6,
-      lineStyle:{width:3, color:c.palette?.[0]||COLOR_PALETTES.default[3]},
-      itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[3]}}]
+      lineStyle:{width:3, color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[3]},
+      itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[3]}}]
   }),
   area: (d, c) => ({
     tooltip:{trigger:'axis', formatter: (p) => `${formatLabel(p[0].name)}<br/><span style="font-weight:bold">${p[0].value.toLocaleString()}</span>`},
@@ -94,9 +94,9 @@ const CHART_TYPES = {
     xAxis: { type:'category', data:d.map(r=>r.label), axisLabel: { ...commonAxis.axisLabel, rotate:30 }, axisLine: commonAxis.axisLine },
     yAxis: { type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine },
     series:[{data:d.map(r=>r.value),type:'line', smooth:true, symbol:'none',
-      areaStyle:{ opacity:0.3, color:c.palette?.[0]||COLOR_PALETTES.default[4] },
-      lineStyle:{width:2, color:c.palette?.[0]||COLOR_PALETTES.default[4]},
-      itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[4]}}]
+      areaStyle:{ opacity:0.3, color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[4] },
+      lineStyle:{width:2, color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[4]},
+      itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[4]}}]
   }),
   pie: (d, c) => ({
     tooltip: { trigger:'item', formatter: (p) => `${formatLabel(p.name)}<br/>${p.value.toLocaleString()} (${p.percent}%)` },
@@ -104,10 +104,10 @@ const CHART_TYPES = {
     series: [{ type:'pie', radius:['30%', '65%'], center:['50%','45%'],
       avoidLabelOverlap: true,
       itemStyle: { borderRadius: 4, borderColor: '#0f172a', borderWidth: 2 },
-      label: { show: false, position: 'outside', formatter: p => formatLabel(p.name) },
+      label: { show: c.showLabels !== false, position: 'outside', formatter: p => formatLabel(p.name) },
       emphasis: { label: { show: true, fontSize: 12, fontWeight: 'bold' } },
       labelLine: { show: false },
-      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:COLOR_PALETTES.default[i%8]}}))
+      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[i%8]}}))
     }]
   }),
   donut: (d, c) => CHART_TYPES.pie(d, c),
@@ -117,7 +117,7 @@ const CHART_TYPES = {
     xAxis: { type:'category', data:d.map(r=>r.label), axisLabel: { ...commonAxis.axisLabel, rotate:30 }, axisLine: commonAxis.axisLine },
     yAxis: { type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine },
     series:[{data:d.map((r,i)=>[i,r.value]),type:'scatter',symbolSize:12,
-      itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[5], opacity:0.8}}]
+      itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[5], opacity:0.8}}]
   }),
   bubble: (d, c) => CHART_TYPES.scatter(d, c),
   heatmap: (d, c) => ({
@@ -125,12 +125,12 @@ const CHART_TYPES = {
     xAxis:{type:'category',data:d.map(r=>r.label), axisLabel: commonAxis.axisLabel},
     yAxis:{type:'category',data:['Value'], axisLabel: commonAxis.axisLabel},
     visualMap:{min:Math.min(...d.map(r=>r.value)),max:Math.max(...d.map(r=>r.value)),calculable:true,orient:'horizontal',left:'center',bottom:0, textStyle:{color:'#94a3b8'}},
-    series:[{type:'heatmap',data:d.map((r,i)=>[i,0,r.value]),label:{show:true}}]
+    series:[{type:'heatmap',data:d.map((r,i)=>[i,0,r.value]),label:{show: c.showLabels !== false}}]
   }),
   treemap: (d, c) => ({
     tooltip:{formatter: p => `${formatLabel(p.name)}<br/>${p.value.toLocaleString()}`},
     series:[{type:'treemap',roam:false,
-      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:COLOR_PALETTES.default[i%8]}})),
+      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[i%8]}})),
       label:{formatter: p => formatLabel(p.name)}}]
   }),
   funnel: (d, c) => ({
@@ -138,9 +138,9 @@ const CHART_TYPES = {
     series:[{type:'funnel',left:'10%',top:60,bottom:60,width:'80%',
       min:0,max:Math.max(...d.map(r=>r.value)),minSize:'0%',maxSize:'100%',
       sort:'descending',gap:2,
-      label:{show:true,position:'inside', formatter: p => formatLabel(p.name)},
+      label:{show: c.showLabels !== false,position:'inside', formatter: p => formatLabel(p.name)},
       itemStyle:{borderColor:'#fff',borderWidth:1},
-      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:COLOR_PALETTES.default[i%8]}}))}]
+      data:d.map((r,i)=>({name:r.label,value:r.value,itemStyle:{color:(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[i%8]}}))}]
   }),
   gauge: (d, c) => {
     const total = d.reduce((s,r)=>s+r.value,0);
@@ -149,7 +149,7 @@ const CHART_TYPES = {
     return {
       series:[{type:'gauge',startAngle:90,endAngle:-270,
         pointer:{show:false},
-        progress:{show:true,overlap:false,roundCap:true,clip:false,
+        progress:{show: c.showLabels !== false,overlap:false,roundCap:true,clip:false,
           itemStyle:{borderWidth:1,borderColor:'#0f172a'}},
         axisLine:{lineStyle:{width:18, color:[[1,'#1e293b']]}},
         splitLine:{show:false},axisTick:{show:false},
@@ -175,7 +175,7 @@ const CHART_TYPES = {
       xAxis:{type:'category',data:buckets.map(b=>b.label),axisLabel:{...commonAxis.axisLabel, rotate:30}, axisLine: commonAxis.axisLine},
       yAxis:{type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine},
       series:[{type:'bar',data:buckets.map(b=>b.count),barWidth:'99%',
-        itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[0]}}]
+        itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0]}}]
     };
   },
   boxplot: (d, c) => {
@@ -187,7 +187,7 @@ const CHART_TYPES = {
       xAxis:{type:'category',data:['Distribution'], axisLabel: commonAxis.axisLabel, axisLine: commonAxis.axisLine},
       yAxis:{type:'value', axisLabel:{ formatter: formatNumber, color: '#94a3b8' }, splitLine: commonAxis.splitLine},
       series:[{type:'boxplot',data:boxData,
-        itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[0]}}]
+        itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0]}}]
     };
   },
   waterfall: (d, c) => {
@@ -209,8 +209,8 @@ const CHART_TYPES = {
       series:[
         {type:'bar',stack:'total',itemStyle:{borderColor:'transparent',color:'transparent'},
          emphasis:{itemStyle:{borderColor:'transparent',color:'transparent'}},data:helper},
-        {type:'bar',stack:'total',data:bar, itemStyle:{borderRadius: [4,4,0,0], color:c.palette?.[0]||COLOR_PALETTES.default[0]},
-         label:{show:true,position:'top',formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10}}
+        {type:'bar',stack:'total',data:bar, itemStyle:{borderRadius: [4,4,0,0], color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0]},
+         label:{show: c.showLabels !== false,position:'top',formatter:v=>formatNumber(v.value), color:'#cbd5e1', fontSize: 10}}
       ]
     };
   },
@@ -218,8 +218,8 @@ const CHART_TYPES = {
     tooltip:{},
     radar:{indicator:d.slice(0,8).map(r=>({name:formatLabel(r.label),max:Math.max(...d.map(x=>x.value))*1.2}))},
     series:[{type:'radar',data:[{value:d.slice(0,8).map(r=>r.value),name:'Values',
-      areaStyle:{opacity:0.2},lineStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[0]},
-      itemStyle:{color:c.palette?.[0]||COLOR_PALETTES.default[0]}}]}]
+      areaStyle:{opacity:0.2},lineStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0]},
+      itemStyle:{color:c.palette?.[0]||(COLOR_PALETTES[c.paletteName]||COLOR_PALETTES.default)[0]}}]}]
   }),
 };
 
