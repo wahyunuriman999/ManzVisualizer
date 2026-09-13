@@ -32,13 +32,58 @@ export const ExportEngine = {
   },
 
   async exportPDF(title, reportText) {
-    Toast.info('PDF export simulated (requires backend)');
+    Toast.info('Generating PDF...');
+    try {
+      const res = await fetch('http://localhost:8050/api/export/pdf?report_text=' + encodeURIComponent(reportText||''), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: AppState.currentSession,
+          format: 'pdf',
+          title: title,
+          charts_data: []
+        })
+      });
+      if (!res.ok) throw new Error('PDF Generation failed');
+      const blob = await res.blob();
+      triggerDownloadBlob(blob, `${title}.pdf`);
+      Toast.success('PDF Exported');
+    } catch(e) {
+      Toast.error(e.message);
+    }
   },
 
-  async exportPPTX(title) {
-    Toast.info('PPTX export simulated (requires backend)');
+  async exportPPTX(title, reportText) {
+    Toast.info('Generating PPTX...');
+    try {
+      const res = await fetch('http://localhost:8050/api/export/pptx?report_text=' + encodeURIComponent(reportText||''), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: AppState.currentSession,
+          format: 'pptx',
+          title: title,
+          charts_data: []
+        })
+      });
+      if (!res.ok) throw new Error('PPTX Generation failed');
+      const blob = await res.blob();
+      triggerDownloadBlob(blob, `${title}.pptx`);
+      Toast.success('PPTX Exported');
+    } catch(e) {
+      Toast.error(e.message);
+    }
   }
 };
+
+function triggerDownloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 function triggerDownload(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType });

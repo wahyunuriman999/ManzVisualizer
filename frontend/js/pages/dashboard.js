@@ -137,7 +137,7 @@ export default {
       <div class="grid-stack-item-content glass-card flex flex-col relative group">
         <div class="text-sm text-gray-400 font-semibold mb-2 flex justify-between">
           <span>${config.title}</span>
-          <button class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" onclick="this.closest('.grid-stack-item').remove()">✖</button>
+          <button class="text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-lg" onclick="this.closest('.grid-stack-item').remove()">&times;</button>
         </div>
         <div class="chart-container flex-grow w-full h-full" id="${config.id}"></div>
       </div>

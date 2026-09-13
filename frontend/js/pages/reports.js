@@ -1,9 +1,16 @@
-import { Toast, AppState } from '../app.js';
+import { Toast, AppState, API } from '../app.js';
 import { ExportEngine } from '../core/export.js';
+
+let lastGeneratedReport = "";
 
 export default {
   render(container) {
-    container.innerHTML = `
+    if (!AppState.currentSession) {
+      container.innerHTML = \`<div class="glass-card p-10 text-center"><p class="text-xl">Please load data first in Data Sources.</p></div>\`;
+      return;
+    }
+
+    container.innerHTML = \`
       <div class="flex h-full gap-6 fade-in">
         <div class="w-1/3 glass-card flex flex-col gap-4 p-5">
           <h2 class="text-xl font-bold mb-2">Report Config</h2>
@@ -16,18 +23,11 @@ export default {
             <option value="gemini">Google Gemini</option>
             <option value="openai">OpenAI GPT-4o</option>
             <option value="anthropic">Anthropic Claude</option>
-            <option value="cohere">Cohere Command-R</option>
-            <option value="ollama">Ollama (Local)</option>
           </select>
           
           <div id="api-key-container" class="flex flex-col gap-1">
             <label class="text-sm font-semibold mt-2">API Key</label>
             <input type="password" id="ai-key" class="p-2 bg-gray-800 rounded border border-gray-600 text-white" placeholder="Enter API Key">
-          </div>
-          
-          <div id="model-container" class="hidden flex flex-col gap-1">
-            <label class="text-sm font-semibold mt-2">Model Name</label>
-            <input type="text" id="ai-model" class="p-2 bg-gray-800 rounded border border-gray-600 text-white" placeholder="llama3, mistral, etc.">
           </div>
           
           <label class="text-sm font-semibold mt-2">Context / Notes</label>
@@ -44,62 +44,68 @@ export default {
               <button id="btn-pptx" class="btn btn-secondary text-sm">Export PPTX</button>
             </div>
           </div>
-          <div id="report-content" class="flex-grow overflow-y-auto prose prose-invert max-w-none text-gray-300">
+          <div id="report-content" class="flex-grow overflow-y-auto max-w-none text-gray-300 markdown-body">
             <p class="text-center text-gray-500 italic mt-20">Click Generate to create an AI-powered report based on your data.</p>
           </div>
         </div>
       </div>
-    `;
+    \`;
 
     const providerSel = container.querySelector('#ai-provider');
-    const keyCont = container.querySelector('#api-key-container');
-    const modelCont = container.querySelector('#model-container');
     const keyInp = container.querySelector('#ai-key');
-    const modelInp = container.querySelector('#ai-model');
 
-    const updateUI = () => {
-      const p = providerSel.value;
-      if (p === 'ollama') {
-        keyCont.classList.add('hidden');
-        modelCont.classList.remove('hidden');
-        modelInp.value = localStorage.getItem('manz_model_ollama') || '';
-      } else {
-        keyCont.classList.remove('hidden');
-        modelCont.classList.add('hidden');
-        keyInp.value = localStorage.getItem(`manz_key_${p}`) || '';
+    providerSel.addEventListener('change', () => {
+      keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+      localStorage.setItem('manz_ai_provider', providerSel.value);
+    });
+    
+    providerSel.value = localStorage.getItem('manz_ai_provider') || 'gemini';
+    keyInp.value = localStorage.getItem(\`manz_key_\${providerSel.value}\`) || '';
+
+    keyInp.addEventListener('change', () => {
+      localStorage.setItem(\`manz_key_\${providerSel.value}\`, keyInp.value);
+    });
+
+    container.querySelector('#btn-generate').onclick = async () => {
+      const title = document.getElementById('rep-title').value;
+      const notes = document.getElementById('rep-notes').value;
+      const provider = providerSel.value;
+      const apiKey = keyInp.value;
+
+      if (!apiKey) return Toast.error('Please enter an API Key first');
+
+      const content = container.querySelector('#report-content');
+      content.innerHTML = \`<div class="flex flex-col items-center justify-center h-full gap-4 mt-10 text-blue-400">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
+        <p class="text-lg">Generating highly detailed executive report with \${provider}...</p>
+      </div>\`;
+      
+      try {
+        const res = await API.post('/api/ai/report', {
+          session_id: AppState.currentSession,
+          provider: provider,
+          api_key: apiKey,
+          title: title,
+          notes: notes
+        });
+
+        lastGeneratedReport = res.report;
+        content.innerHTML = marked.parse(res.report);
+        
+        Toast.success('Report generated successfully.');
+      } catch (err) {
+        content.innerHTML = \`<div class="p-4 bg-red-900/50 border border-red-500 rounded text-red-200">\${err.message}</div>\`;
       }
     };
 
-    providerSel.addEventListener('change', updateUI);
-    // Initialize
-    providerSel.value = localStorage.getItem('manz_ai_provider') || 'gemini';
-    updateUI();
-
-    container.querySelector('#btn-generate').onclick = () => {
-      const p = providerSel.value;
-      localStorage.setItem('manz_ai_provider', p);
-      if (p === 'ollama') localStorage.setItem('manz_model_ollama', modelInp.value);
-      else localStorage.setItem(`manz_key_${p}`, keyInp.value);
-
-      const content = container.querySelector('#report-content');
-      content.innerHTML = `<div class="flex items-center justify-center h-full text-blue-400 animate-pulse text-lg">Generating report with ${p}...</div>`;
-      
-      // Simulate API call
-      setTimeout(() => {
-        content.innerHTML = `
-          <h2>${document.getElementById('rep-title').value}</h2>
-          <p>Generated by ${p}.</p>
-          <h3>Key Insights</h3>
-          <ul>
-            <li>Revenue increased by 15% this quarter.</li>
-            <li>Cost optimization improved margins by 3%.</li>
-          </ul>
-        `;
-        Toast.success('Report generated successfully.');
-      }, 1500);
+    container.querySelector('#btn-pdf').onclick = () => {
+      if (!lastGeneratedReport) return Toast.error('Please generate a report first');
+      ExportEngine.exportPDF(document.getElementById('rep-title').value, lastGeneratedReport);
     };
 
-    container.querySelector('#btn-pdf').onclick = () => ExportEngine.exportPDF();
-    container.querySelector('#btn-pptx').onclick = () => ExportEngine.exportPPTX();
+    container.querySelector('#btn-pptx').onclick = () => {
+      if (!lastGeneratedReport) return Toast.error('Please generate a report first');
+      ExportEngine.exportPPTX(document.getElementById('rep-title').value, lastGeneratedReport);
+    };
   }
 };
