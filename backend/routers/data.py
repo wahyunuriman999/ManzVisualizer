@@ -75,10 +75,12 @@ async def load_sample(name: str, accept_language: Optional[str] = Header(None)):
         raise HTTPException(status_code=400, detail=get_text(accept_language, 'error_file') + f": {str(e)}")
 
 @router.get('/preview/{session_id}')
-async def preview_data(session_id: str, accept_language: Optional[str] = Header(None)):
+async def preview_data(session_id: str, limit: int = 100, accept_language: Optional[str] = Header(None)):
     try:
         df = load_session(session_id)
-        return df.head(100).fillna("").to_dict(orient='records')
+        if limit > 0:
+            df = df.head(limit)
+        return df.fillna("").to_dict(orient='records')
     except Exception as e:
         raise HTTPException(status_code=404, detail=get_text(accept_language, 'error_not_found'))
 
